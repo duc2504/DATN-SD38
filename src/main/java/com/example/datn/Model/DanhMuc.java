@@ -1,5 +1,6 @@
 package com.example.datn.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,7 +21,7 @@ public class DanhMuc {
     private String moTa;
 
     @OneToMany(mappedBy = "danhMuc")
-
+//    @JsonBackReference // <-- THÊM ANNOTATION NÀY VÀO
     private List<SanPham> sanPhamList;
 
     @OneToMany(mappedBy = "danhMuc")

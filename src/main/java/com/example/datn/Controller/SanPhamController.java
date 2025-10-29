@@ -1,9 +1,13 @@
 package com.example.datn.Controller;
 
+import com.example.datn.DTO.TrangMuaHang.KetQuaTimKiemDTO;
+import com.example.datn.DTO.TrangMuaHang.PhuKienSearchDTO;
 import com.example.datn.DTO.TrangMuaHang.SanPhamChiTietDTO;
 import com.example.datn.DTO.TrangMuaHang.TrangChuSanPham;
+import com.example.datn.Service.PhuKienService;
 import com.example.datn.Service.SanPhamService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -75,17 +79,44 @@ public class SanPhamController {
 
 
     // API tìm sản phẩm theo tên
-    @GetMapping("/search")
-    public ResponseEntity<List<TrangChuSanPham>> searchSanPham(
-            @RequestParam("tenSanPham") String tenSanPham
-    ) {
-        List<TrangChuSanPham> products = sanPhamService.getSanPhamByTen(tenSanPham);
+//    @GetMapping("/search")
+//    public ResponseEntity<List<TrangChuSanPham>> searchSanPham(
+//            @RequestParam("tenSanPham") String tenSanPham
+//    ) {
+//        List<TrangChuSanPham> products = sanPhamService.getSanPhamByTen(tenSanPham);
+//
+//        if (products.isEmpty()) {
+//            return ResponseEntity.noContent().build();
+//        }
+//
+//        return ResponseEntity.ok(products);
+//    }
 
-        if (products.isEmpty()) {
+    @Autowired
+    private PhuKienService phuKienService; // <-- Inject service mới
+
+    @GetMapping("/search")
+    public ResponseEntity<KetQuaTimKiemDTO> searchTatCa( // <-- Thay đổi kiểu trả về
+                                                         @RequestParam("tenSanPham") String ten // <-- Đổi tên param cho chung chung
+    ) {
+        // 1. Tìm sản phẩm (như cũ)
+        List<TrangChuSanPham> products = sanPhamService.getSanPhamByTen(ten);
+
+        // 2. Tìm phụ kiện (mới)
+        List<PhuKienSearchDTO> accessories = phuKienService.getPhuKienByTen(ten);
+
+        // 3. Tạo đối tượng trả về
+        KetQuaTimKiemDTO ketQua = new KetQuaTimKiemDTO();
+        ketQua.setSanPham(products);
+        ketQua.setPhuKien(accessories);
+
+        // 4. Kiểm tra nếu cả hai đều rỗng
+        if (products.isEmpty() && accessories.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
 
-        return ResponseEntity.ok(products);
+        // 5. Trả về đối tượng wrapper
+        return ResponseEntity.ok(ketQua);
     }
 
 

@@ -76,20 +76,7 @@ public List<TrangChuSanPham> getSanPhamByTen(String tenSanPham) {
     List<TrangChuSanPham> result = new ArrayList<>();
 
     for (Object[] r : rows) {
-//        TrangChuSanPham dto = new TrangChuSanPham();
-//        dto.setMaSanPham(((Number) r[0]).intValue());
-//        dto.setTenSanPham((String) r[1]);
-//        dto.setMoTa((String) r[2]);
-//        dto.setSoLuong(r[3] != null ? ((Number) r[3]).intValue() : null);
-//        dto.setMaDanhMuc(r[4] != null ? ((Number) r[4]).intValue() : null);
-//        dto.setTenDanhMuc((String) r[5]);
-//
-//        // Thông tin của biến thể có giá thấp nhất
-//        dto.setMaSKU((String) r[6]);
-//        dto.setGiaKhongKhuyenMaiBienThe((BigDecimal) r[7]);
-//        dto.setGiaBienThe((BigDecimal) r[8]);  // giá hiển thị = giá sau KM của biến thể min
-//        dto.setGiaTriGiamKhuyenMai((BigDecimal) r[9]);
-//        dto.setLoaiGiam(r[10] != null ? ((Number) r[10]).intValue() : null);
+
         TrangChuSanPham dto = new TrangChuSanPham();
         dto.setMaSanPham(((Number) r[0]).intValue());
         dto.setTenSanPham((String) r[1]);

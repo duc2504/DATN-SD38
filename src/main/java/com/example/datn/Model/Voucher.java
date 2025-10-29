@@ -56,6 +56,12 @@ public class Voucher {
     @Column(name = "ngayKetThuc")
     private LocalDateTime ngayKetThuc;
 
+
+    @Column(name = "soLuongToiDa")
+    private Integer soLuongToiDa; // Dùng Integer để cho phép giá trị NULL
+
+    @Column(name = "soLuongDaNhan")
+    private Integer soLuongDaNhan = 0; // Đặt giá trị mặc định là 0
     @Column(name = "trangThai")
     private Integer trangThai ;
 

@@ -33,4 +33,9 @@ public class VariantSummaryDTO {
     private String tenHienThi; // Gộp cả tên danh mục, tên sản phẩm và SKU
     private BigDecimal gia; // Giá sau khi áp dụng khuyến mãi (nếu có)
     private BigDecimal giaKhongKhuyenMai; // Giá gốc
+
+    public VariantSummaryDTO(String maSKU, String tenHienThi) {
+        this.maSKU = maSKU;
+        this.tenHienThi = tenHienThi;
+    }
 }

@@ -9,10 +9,9 @@ import com.example.datn.Service.UserVoucherService;
 import com.example.datn.Service.VoucherService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,49 +29,54 @@ public class VoucherController {
 
 
 
-//    @GetMapping("/me")
-//    public ResponseEntity<List<UserVoucherDTO>> getMyVouchers(HttpServletRequest request) {
-//        // Lấy token từ header
-//        String authHeader = request.getHeader("Authorization");
-//        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-//            return ResponseEntity.status(401).build();
-//        }
-//        String token = authHeader.substring(7);
-//
-//        // Lấy username từ token
-//        String username = jwtUtil.extractUsername(token);
-//
-//        // Lấy userId từ DB
-//        Users user = userRepo.findByUsername(username)
-//                .orElseThrow(() -> new RuntimeException("User not found"));
-//
-//        // Query vouchers
-//        List<UserVoucherDTO> result = service.getActiveVouchersByUser(user.getId())
-//                .stream()
-//                .map(uv -> UserVoucherDTO.builder()
-//                        .id(uv.getId())
-//                        .userId(uv.getUser().getId())
-//                        .soLanSuDung(uv.getSoLanSuDung())
-//                        .ngayNhan(uv.getNgayNhan())
-//                        .trangThai(uv.getTrangThai())
-//                        .voucher(VoucherDTO.builder()
-//                                .id(uv.getVoucher().getId())
-//                                .codeVoucher(uv.getVoucher().getCodeVoucher())
-//                                .tenVoucher(uv.getVoucher().getTenVoucher())
-//                                .soLanSuDung(uv.getVoucher().getSoLanSuDung())
-//                                .moTa(uv.getVoucher().getMoTa())
-//                                .loaiGiam(uv.getVoucher().getLoaiGiam())
-//                                .giaTriGiam(uv.getVoucher().getGiaTriGiam())
-//                                .dieuKienGiam(uv.getVoucher().getDieuKienGiam())
-//                                .giamToiDa(uv.getVoucher().getGiamToiDa())
-//                                .ngayBatDau(uv.getVoucher().getNgayBatDau())
-//                                .ngayKetThuc(uv.getVoucher().getNgayKetThuc())
-//                                .build())
-//                        .build())
-//                .collect(Collectors.toList());
-//
-//        return ResponseEntity.ok(result);
-//    }
+
+    @GetMapping
+    public ResponseEntity<List<VoucherDTO>> getAllVouchers() {
+        // Gọi service để lấy dữ liệu
+        List<VoucherDTO> voucherList = voucherService.getAllVouchers();
+
+        // Trả về danh sách voucher với status code 200 (OK)
+        return ResponseEntity.ok(voucherList);
+    }
+
+
+    // --- BỔ SUNG CÁC ENDPOINT MỚI ---
+
+    /**
+     * [POST] Thêm mới một voucher
+     * Client gửi VoucherDTO (không cần id) trong body của request
+     */
+    @PostMapping
+    public ResponseEntity<VoucherDTO> createVoucher(@RequestBody VoucherDTO voucherDTO) {
+        VoucherDTO createdVoucher = voucherService.createVoucher(voucherDTO);
+        // Trả về DTO đã được tạo (có ID) với status 201 (Created)
+        return new ResponseEntity<>(createdVoucher, HttpStatus.CREATED);
+    }
+
+    /**
+     * [PUT] Cập nhật một voucher
+     * Client gửi id trên URL và VoucherDTO (đã chỉnh sửa) trong body
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity<VoucherDTO> updateVoucher(
+            @PathVariable Integer id,
+            @RequestBody VoucherDTO voucherDTO) {
+
+        VoucherDTO updatedVoucher = voucherService.updateVoucher(id, voucherDTO);
+        // Trả về DTO đã được cập nhật với status 200 (OK)
+        return ResponseEntity.ok(updatedVoucher);
+    }
+
+    /**
+     * [DELETE] Xóa một voucher
+     * Client gửi id của voucher cần xóa trên URL
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteVoucher(@PathVariable Integer id) {
+        voucherService.deleteVoucher(id);
+        // Trả về status 204 (No Content) để thông báo xóa thành công
+        return ResponseEntity.noContent().build();
+    }
 
 
     @GetMapping("/me")

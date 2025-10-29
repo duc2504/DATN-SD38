@@ -28,6 +28,7 @@ public class SanPham {
     private Integer trangThai;
 
     @ManyToOne
+//    @JsonManagedReference // <-- THÊM ANNOTATION NÀY
     @JoinColumn(name = "maDanhMuc")
     private DanhMuc danhMuc;
 

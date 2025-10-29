@@ -2,6 +2,7 @@ package com.example.datn.Service;
 
 import com.example.datn.DTO.CRUDphukien.PhuKienDTO;
 import com.example.datn.DTO.PhuKienDTO.PhuKienChiTietDTO;
+import com.example.datn.DTO.TrangMuaHang.PhuKienSearchDTO;
 import com.example.datn.DTO.TrangMuaHang.TrangChuPhuKien;
 
 import com.example.datn.Model.PhuKien;
@@ -33,6 +34,24 @@ public class PhuKienService {
     private final FeedBackRepository feedBackRepository   ;
 
 
+
+    public List<PhuKienSearchDTO> getPhuKienByTen(String ten) {
+        List<Object[]> rows = phuKienRepo.findPhuKienByTen(ten);
+        List<PhuKienSearchDTO> results = new ArrayList<>();
+
+        for (Object[] r : rows) {
+            PhuKienSearchDTO dto = new PhuKienSearchDTO();
+            dto.setMaPhuKien(((Number) r[0]).intValue());
+            dto.setTenPhuKien((String) r[1]);
+            dto.setThuongHieu((String) r[2]);
+            dto.setMoTa((String) r[3]);
+            dto.setGia((BigDecimal) r[4]);
+            dto.setSoLuong(r[5] != null ? ((Number) r[5]).intValue() : null);
+            dto.setTenDanhMucPhuKien((String) r[6]);
+            results.add(dto);
+        }
+        return results;
+    }
 
     public List<TrangChuPhuKien> getAllPhuKien() {
         return phuKienRepo.findAll().stream().map(pk -> {
